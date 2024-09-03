@@ -58,11 +58,9 @@ class AVLtree:
         if not cur_node:
             cur_node = Node(value, par_node=parent)
         elif cur_node.value > value:
-            cur_node.left_child = self._insert(
-                cur_node.left_child, value, cur_node)
+            cur_node.left_child = self._insert(cur_node.left_child, value, cur_node)
         elif cur_node.value < value:
-            cur_node.right_child = self._insert(
-                cur_node.right_child, value, cur_node)
+            cur_node.right_child = self._insert(cur_node.right_child, value, cur_node)
         cur_node = self.balance(cur_node)
         return cur_node
 
@@ -88,11 +86,19 @@ class AVLtree:
         return 0
 
     def fix_height(self, cur_node):
-        return max(self.get_height(cur_node.right_child), self.get_height(cur_node.left_child)) + 1
+        return (
+            max(
+                self.get_height(cur_node.right_child),
+                self.get_height(cur_node.left_child),
+            )
+            + 1
+        )
 
     def balance_factor(self, cur_node):
         if cur_node:
-            return self.get_height(cur_node.right_child) - self.get_height(cur_node.left_child)
+            return self.get_height(cur_node.right_child) - self.get_height(
+                cur_node.left_child
+            )
         return 0
 
     def _turn_left(self, q: Node):
@@ -125,18 +131,22 @@ class AVLtree:
         if cur_node.left_child:
             self._print_in_order(cur_node.left_child, answer_list)
         answer_list.append(
-            [cur_node.value, cur_node.parent.value if cur_node.parent is not None else None, cur_node.height])
+            [
+                cur_node.value,
+                cur_node.parent.value if cur_node.parent is not None else None,
+                cur_node.height,
+            ]
+        )
         if cur_node.right_child:
             self._print_in_order(cur_node.right_child, answer_list)
 
     def delete(self, value):
         if self.root is not None:
             self.root = self._delete(value, self.root)
-            
 
     def _delete(self, value, cur_node: Node):
         if value == cur_node.value:
-            print('We find cur_node', cur_node.value)
+            print("We find cur_node", cur_node.value)
             cur_node = self._delete_(cur_node)
         elif value > cur_node.value:
             cur_node.right_child = self._delete(value, cur_node.right_child)
@@ -144,13 +154,13 @@ class AVLtree:
             cur_node.left_child = self._delete(value, cur_node.left_child)
         cur_node = self.balance(cur_node)
         return cur_node
-    
+
     def _find_maxLeft(self, cur_node: Node):
         if cur_node.right_child:
             cur_node = cur_node.right_child
             cur_node = self._find_maxLeft(cur_node)
         return cur_node
-    
+
     def _delete_(self, cur_node: Node):
         if not cur_node.hasBothChild():
             if cur_node.hasLeftChild():
@@ -169,12 +179,3 @@ class AVLtree:
             max_left.parent.right_child = None
             max_left.parent = cur_node.parent
             return max_left
-
-
-
-
-
-
-
-
-
